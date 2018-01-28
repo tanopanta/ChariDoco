@@ -26,6 +26,7 @@
         android:layout_marginEnd="78dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="52dp"
+        android:labelFor="@+id/editTime"
         android:text="@string/timerTitle"
         app:layout_constraintEnd_toStartOf="@+id/editTime"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:layout_marginTop="64dp"
+        android:labelFor="@+id/editParkingID"
         android:text="@string/ParkingID"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintStart_toStartOf="@+id/textView"
@@ -58,12 +60,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="215dp"
+        android:labelFor="@+id/editMemo"
         android:text="@string/Memo"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editMemo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
