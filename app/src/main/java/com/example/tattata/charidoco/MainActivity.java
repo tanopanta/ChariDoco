@@ -1,13 +1,17 @@
 package com.example.tattata.charidoco;
 
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.util.Calendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
@@ -30,6 +34,25 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         editParkingID = findViewById(R.id.editParkingID);
         editMemo = findViewById(R.id.editMemo);
         loadData();
+
+        FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(view.getContext())
+                        .setTitle("確認")
+                        .setMessage("リセットしますか？")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // OK button pressed
+                                reset();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            }
+        });
     }
 
     @Override
@@ -54,5 +77,12 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         editTime.setText(pref.getString("parkingTime", ""));
         editParkingID.setText(pref.getString("parkingID", ""));
         editMemo.setText(pref.getString("memo", ""));
+    }
+    private void reset() {
+        final Calendar calendar = Calendar.getInstance();
+        String now = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        editTime.setText(now);
+        editParkingID.setText("");
+        editMemo.setText("");
     }
 }
