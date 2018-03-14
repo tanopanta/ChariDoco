@@ -24,16 +24,18 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         editTime = findViewById(R.id.editTime);
-        editTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TimeFragment timeFragment = new TimeFragment();
-                timeFragment.show(getSupportFragmentManager(), "timePicker");
-            }
-        });
         editParkingID = findViewById(R.id.editParkingID);
         editMemo = findViewById(R.id.editMemo);
         loadData();
+
+        findViewById(R.id.buttonTimeEdit)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        TimeFragment timeFragment = new TimeFragment();
+                        timeFragment.show(getSupportFragmentManager(), "timePicker");
+                    }
+                });
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
