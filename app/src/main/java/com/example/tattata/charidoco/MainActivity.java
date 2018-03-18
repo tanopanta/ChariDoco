@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     }
     private void reset() {
         final Calendar calendar = Calendar.getInstance();
-        String now = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
+        String now = String.format(Locale.US, "%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
         editTime.setText(now);
         editParkingID.setText("");
         editMemo.setText("");
