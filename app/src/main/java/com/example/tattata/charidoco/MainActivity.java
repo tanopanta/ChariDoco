@@ -13,6 +13,7 @@ import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     EditText editTime;
     EditText editParkingID;
     EditText editMemo;
+
+    Calendar parkingCalendar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         editTime = findViewById(R.id.editTime);
         editParkingID = findViewById(R.id.editParkingID);
         editMemo = findViewById(R.id.editMemo);
-        loadData();
 
         findViewById(R.id.buttonTimeEdit)
                 .setOnClickListener(new View.OnClickListener() {
@@ -58,11 +60,17 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
                         .show();
             }
         });
+
+        parkingCalendar = Calendar.getInstance();
+
+        loadData();
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         editTime.setText(String.format(Locale.US, "%02d:%02d", hour,minute));
+        parkingCalendar.set(Calendar.HOUR_OF_DAY, hour);
+        parkingCalendar.set(Calendar.MINUTE, minute);
     }
 
     @Override
@@ -73,26 +81,42 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     private void saveData() {
         SharedPreferences.Editor editor = getSharedPreferences("ChariDoco", MODE_PRIVATE).edit();
 
-        editor.putString("parkingDate", editDate.getText().toString());
-        editor.putString("parkingTime", editTime.getText().toString());
         editor.putString("parkingID", editParkingID.getText().toString());
         editor.putString("memo", editMemo.getText().toString());
+        editor.putLong("parkingUnixTime", calendarToLong(parkingCalendar));
         editor.apply();
     }
     private void loadData() {
         SharedPreferences pref = getSharedPreferences("ChariDoco", MODE_PRIVATE);
-        editDate.setText(pref.getString("parkingDate", ""));
-        editTime.setText(pref.getString("parkingTime", ""));
+
+        long unixTime = pref.getLong("parkingUnixTime", 0);
+        if(unixTime != 0) {
+            longToCalendar(unixTime, parkingCalendar);
+        }
+        //else(初回起動時):parkingCalendar=現在時刻　に初期化済み。
+        Date date = parkingCalendar.getTime();
+        editDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(date));
+        editTime.setText(new SimpleDateFormat("HH:mm", Locale.US).format(date));
+
         editParkingID.setText(pref.getString("parkingID", ""));
         editMemo.setText(pref.getString("memo", ""));
     }
     private void reset() {
-        final Calendar calendar = Calendar.getInstance();
-        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(calendar.getTime());
-        String now = String.format(Locale.US, "%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
+        parkingCalendar = Calendar.getInstance();
+        Date date = parkingCalendar.getTime();
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(date);
+        String now = new SimpleDateFormat("HH:mm", Locale.US).format(date);
         editDate.setText(today);
         editTime.setText(now);
         editParkingID.setText("");
         editMemo.setText("");
+    }
+
+    private long calendarToLong(Calendar from) {
+        return from.getTime().getTime();
+    }
+    private void longToCalendar(long from, Calendar to) {
+        Date date = new Date(from);
+        to.setTime(date);
     }
 }
