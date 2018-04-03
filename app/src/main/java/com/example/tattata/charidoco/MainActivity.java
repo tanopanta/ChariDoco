@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
@@ -18,8 +19,9 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
-    EditText editDate;
-    EditText editTime;
+    TextView textDate;
+    TextView textTime
+            ;
     EditText editParkingID;
     EditText editMemo;
 
@@ -28,8 +30,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editDate = findViewById(R.id.editDate);
-        editTime = findViewById(R.id.editTime);
+        textDate = findViewById(R.id.textDate);
+        textTime = findViewById(R.id.textTime);
         editParkingID = findViewById(R.id.editParkingID);
         editMemo = findViewById(R.id.editMemo);
 
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        editTime.setText(String.format(Locale.US, "%02d:%02d", hour,minute));
+        textTime.setText(String.format(Locale.US, "%02d:%02d", hour,minute));
         parkingCalendar.set(Calendar.HOUR_OF_DAY, hour);
         parkingCalendar.set(Calendar.MINUTE, minute);
     }
@@ -95,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         }
         //else(初回起動時):parkingCalendar=現在時刻　に初期化済み。
         Date date = parkingCalendar.getTime();
-        editDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(date));
-        editTime.setText(new SimpleDateFormat("HH:mm", Locale.US).format(date));
+        textDate.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(date));
+        textTime.setText(new SimpleDateFormat("HH:mm", Locale.US).format(date));
 
         editParkingID.setText(pref.getString("parkingID", ""));
         editMemo.setText(pref.getString("memo", ""));
@@ -106,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         Date date = parkingCalendar.getTime();
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(date);
         String now = new SimpleDateFormat("HH:mm", Locale.US).format(date);
-        editDate.setText(today);
-        editTime.setText(now);
+        textDate.setText(today);
+        textTime.setText(now);
         editParkingID.setText("");
         editMemo.setText("");
     }

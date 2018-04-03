@@ -7,16 +7,16 @@
     tools:context="com.example.tattata.charidoco.MainActivity"
     tools:layout_editor_absoluteY="81dp">
 
-    <EditText
-        android:id="@+id/editTime"
-        android:layout_width="99dp"
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="40dp"
-        android:ems="10"
-        android:inputType="none|time"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="168dp"
+        android:layout_marginTop="44dp"
+        android:text="2017/00/00"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/textTime"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,12 +48,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editDate" />
+        app:layout_constraintTop_toBottomOf="@+id/textTime" />
 
     <TextView
         android:id="@+id/textView3"
@@ -98,19 +98,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editTime"
+        app:layout_constraintTop_toTopOf="@+id/textTime"
         app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
 
-    <EditText
-        android:id="@+id/editDate"
-        android:layout_width="110dp"
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="40dp"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintEnd_toStartOf="@+id/editTime"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="44dp"
+        android:text="00:00"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/buttonTimeEdit"
         app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
