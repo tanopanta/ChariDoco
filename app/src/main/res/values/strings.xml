@@ -6,4 +6,5 @@
     <string name="timerTitle">入庫時刻</string>
     <string name="ParkingID">駐輪番号</string>
     <string name="Memo">メモ</string>
+    <string name="elapsed_time">経過時間</string>
 </resources>

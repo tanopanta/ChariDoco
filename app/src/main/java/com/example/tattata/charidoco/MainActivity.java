@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,18 +21,21 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
 
     TextView textDate;
-    TextView textTime
-            ;
+    TextView textTime;
+    TextView textElapsedTime;
     EditText editParkingID;
     EditText editMemo;
 
     Calendar parkingCalendar;
+    Handler timerHandler;
+    Runnable timerRunnable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textDate = findViewById(R.id.textDate);
         textTime = findViewById(R.id.textTime);
+        textElapsedTime = findViewById(R.id.textElapsedTime);
         editParkingID = findViewById(R.id.editParkingID);
         editMemo = findViewById(R.id.editMemo);
 
@@ -66,6 +70,29 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         parkingCalendar = Calendar.getInstance();
 
         loadData();
+
+        //経過時間を表示するためのハンドラ
+        timerHandler = new Handler();
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                long diffTime = (System.currentTimeMillis() - parkingCalendar.getTimeInMillis()) / 60000;
+                textElapsedTime.setText(String.format(Locale.US, "%02d:%02d", diffTime / 60, diffTime % 60));
+                timerHandler.postDelayed(this, 30000);
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timerHandler.post(timerRunnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timerHandler.removeCallbacks(timerRunnable);
     }
 
     @Override
@@ -112,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         textTime.setText(now);
         editParkingID.setText("");
         editMemo.setText("");
+        textElapsedTime.setText("00:00");
     }
 
     private long calendarToLong(Calendar from) {
