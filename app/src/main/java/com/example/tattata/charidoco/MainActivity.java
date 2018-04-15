@@ -1,6 +1,8 @@
 package com.example.tattata.charidoco;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -9,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -18,7 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
+public class MainActivity extends AppCompatActivity{
 
     TextView textDate;
     TextView textTime;
@@ -39,16 +42,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         editParkingID = findViewById(R.id.editParkingID);
         editMemo = findViewById(R.id.editMemo);
 
-        findViewById(R.id.buttonTimeEdit)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        TimeFragment timeFragment = new TimeFragment();
-                        timeFragment.show(getSupportFragmentManager(), "timePicker");
-                    }
-                });
 
-        FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+
+        final FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +77,55 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
                 timerHandler.postDelayed(this, 30000);
             }
         };
+
+        findViewById(R.id.textTime)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(
+                                MainActivity.this,
+                                new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                                        textTime.setText(String.format(Locale.US, "%02d:%02d", hour,minute));
+                                        parkingCalendar.set(Calendar.HOUR_OF_DAY, hour);
+                                        parkingCalendar.set(Calendar.MINUTE, minute);
+                                        resetElapsedTime();
+                                    }
+                                },
+                                parkingCalendar.get(Calendar.HOUR_OF_DAY),
+                                parkingCalendar.get(Calendar.MINUTE),
+                                true
+                        );
+                        timePickerDialog.show();
+                    }
+                });
+        findViewById(R.id.textDate)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //DatePickerDialogインスタンスを取得
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                                MainActivity.this,
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                        parkingCalendar.set(Calendar.YEAR, year);
+                                        parkingCalendar.set(Calendar.MONTH, month);
+                                        parkingCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                        textDate.setText(String.format(Locale.US, "%d-%02d-%02d", year, month+1, dayOfMonth));
+                                        resetElapsedTime();
+                                    }
+                                },
+                                parkingCalendar.get(Calendar.YEAR),
+                                parkingCalendar.get(Calendar.MONTH),
+                                parkingCalendar.get(Calendar.DATE)
+                        );
+
+                        //dialogを表示
+                        datePickerDialog.show();
+                    }
+                });
     }
 
     @Override
@@ -93,13 +138,6 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
     protected void onPause() {
         super.onPause();
         timerHandler.removeCallbacks(timerRunnable);
-    }
-
-    @Override
-    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        textTime.setText(String.format(Locale.US, "%02d:%02d", hour,minute));
-        parkingCalendar.set(Calendar.HOUR_OF_DAY, hour);
-        parkingCalendar.set(Calendar.MINUTE, minute);
     }
 
     @Override
@@ -140,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         editParkingID.setText("");
         editMemo.setText("");
 
+        resetElapsedTime();
+    }
+    private void resetElapsedTime() {
         //経過時間をリセット
         timerHandler.removeCallbacks(timerRunnable);
         timerHandler.post(timerRunnable);
