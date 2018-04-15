@@ -139,7 +139,10 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         textTime.setText(now);
         editParkingID.setText("");
         editMemo.setText("");
-        textElapsedTime.setText("00:00");
+
+        //経過時間をリセット
+        timerHandler.removeCallbacks(timerRunnable);
+        timerHandler.post(timerRunnable);
     }
 
     private long calendarToLong(Calendar from) {
