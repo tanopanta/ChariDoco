@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -126,6 +127,18 @@ public class MainActivity extends AppCompatActivity{
                         datePickerDialog.show();
                     }
                 });
+        findViewById(R.id.buttonOK).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAndRemoveTask();
+                } else {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
