@@ -3,12 +3,17 @@ package com.example.tattata.charidoco;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -130,7 +135,15 @@ public class MainActivity extends AppCompatActivity{
         findViewById(R.id.buttonOK).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                NotificationCompat.Builder mNotification = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("ChariDoco")
+                        .setContentText(String.format(Locale.US, "入庫時刻:%02d:%02d 駐輪番号:%s",
+                                parkingCalendar.get(Calendar.HOUR_OF_DAY),
+                                parkingCalendar.get(Calendar.MINUTE),
+                                editParkingID.getText().toString()));
+                NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+                manager.notify(749812, mNotification.build());
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     finishAndRemoveTask();
