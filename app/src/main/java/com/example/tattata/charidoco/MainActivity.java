@@ -1,21 +1,17 @@
 package com.example.tattata.charidoco;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     TextView textDate;
     TextView textTime;
@@ -38,17 +34,17 @@ public class MainActivity extends AppCompatActivity{
     Calendar parkingCalendar;
     Handler timerHandler;
     Runnable timerRunnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         textDate = findViewById(R.id.textDate);
         textTime = findViewById(R.id.textTime);
         textElapsedTime = findViewById(R.id.textElapsedTime);
         editParkingID = findViewById(R.id.editParkingID);
         editMemo = findViewById(R.id.editMemo);
-
-
 
         final FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity{
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                                        textTime.setText(String.format(Locale.US, "%02d:%02d", hour,minute));
+                                        textTime.setText(String.format(Locale.US, "%02d:%02d", hour, minute));
                                         parkingCalendar.set(Calendar.HOUR_OF_DAY, hour);
                                         parkingCalendar.set(Calendar.MINUTE, minute);
                                         resetElapsedTime();
@@ -119,7 +115,7 @@ public class MainActivity extends AppCompatActivity{
                                         parkingCalendar.set(Calendar.YEAR, year);
                                         parkingCalendar.set(Calendar.MONTH, month);
                                         parkingCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                        textDate.setText(String.format(Locale.US, "%d-%02d-%02d", year, month+1, dayOfMonth));
+                                        textDate.setText(String.format(Locale.US, "%d-%02d-%02d", year, month + 1, dayOfMonth));
                                         resetElapsedTime();
                                     }
                                 },
@@ -136,7 +132,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 NotificationCompat.Builder mNotification = new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_stat_name)
                         .setContentTitle("ChariDoco")
                         .setContentText(String.format(Locale.US, "入庫時刻:%02d:%02d 駐輪番号:%s",
                                 parkingCalendar.get(Calendar.HOUR_OF_DAY),
@@ -171,6 +167,7 @@ public class MainActivity extends AppCompatActivity{
         super.onStop();
         saveData();
     }
+
     private void saveData() {
         SharedPreferences.Editor editor = getSharedPreferences("ChariDoco", MODE_PRIVATE).edit();
 
@@ -179,11 +176,12 @@ public class MainActivity extends AppCompatActivity{
         editor.putLong("parkingUnixTime", calendarToLong(parkingCalendar));
         editor.apply();
     }
+
     private void loadData() {
         SharedPreferences pref = getSharedPreferences("ChariDoco", MODE_PRIVATE);
 
         long unixTime = pref.getLong("parkingUnixTime", 0);
-        if(unixTime != 0) {
+        if (unixTime != 0) {
             longToCalendar(unixTime, parkingCalendar);
         }
         //else(初回起動時):parkingCalendar=現在時刻　に初期化済み。
@@ -194,6 +192,7 @@ public class MainActivity extends AppCompatActivity{
         editParkingID.setText(pref.getString("parkingID", ""));
         editMemo.setText(pref.getString("memo", ""));
     }
+
     private void reset() {
         parkingCalendar = Calendar.getInstance();
         Date date = parkingCalendar.getTime();
@@ -206,6 +205,7 @@ public class MainActivity extends AppCompatActivity{
 
         resetElapsedTime();
     }
+
     private void resetElapsedTime() {
         //経過時間をリセット
         timerHandler.removeCallbacks(timerRunnable);
@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity{
     private long calendarToLong(Calendar from) {
         return from.getTime().getTime();
     }
+
     private void longToCalendar(long from, Calendar to) {
         Date date = new Date(from);
         to.setTime(date);
