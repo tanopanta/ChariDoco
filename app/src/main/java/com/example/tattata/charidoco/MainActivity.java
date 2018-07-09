@@ -128,19 +128,30 @@ public class MainActivity extends AppCompatActivity {
                         datePickerDialog.show();
                     }
                 });
+
+        //OKボタンで通知を発行しアプリを終了
         findViewById(R.id.buttonOK).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //通知メッセージを作成
+                String msg = String.format(Locale.US, "入庫時刻:%02d:%02d", parkingCalendar.get(Calendar.HOUR_OF_DAY), parkingCalendar.get(Calendar.MINUTE));
+                String id = editParkingID.getText().toString().trim();
+                String memo = editMemo.getText().toString().trim();
+                if(!id.isEmpty()) {
+                    msg += " 駐輪番号:" + id;
+                }
+                if(!memo.isEmpty()) {
+                    msg += " メモ:" + memo.replace('\n', ';');
+                }
+
                 NotificationCompat.Builder mNotification = new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.drawable.ic_stat_name)
                         .setContentTitle("ChariDoco")
-                        .setContentText(String.format(Locale.US, "入庫時刻:%02d:%02d 駐輪番号:%s",
-                                parkingCalendar.get(Calendar.HOUR_OF_DAY),
-                                parkingCalendar.get(Calendar.MINUTE),
-                                editParkingID.getText().toString()));
+                        .setContentText(msg);
                 NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
                 manager.notify(749812, mNotification.build());
 
+                //アプリを終了
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     finishAndRemoveTask();
                 } else {
